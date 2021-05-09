@@ -8,3 +8,4 @@ statement_en.html
 statement_fr.html
 .pydevproject
 copy.sh
+docker-compose.yaml

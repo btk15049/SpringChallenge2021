@@ -6,15 +6,16 @@ import com.codingame.gameengine.runner.MultiplayerGameRunner;
 
 public class Spring2021 {
 
-    static String[] DEFAULT_AI = new String[] {
-        "python3", "config/Boss.py"
-    };
-    static String[] BOSS_WOOD2 = new String[] {
-        "python3", "config/level1/Boss.py"
-    };
-    static String[] BOSS_WOOD1 = new String[] {
-        "python3", "config/level2/Boss.py"
-    };
+    private static final String E_CMD_A = "CMD_A";
+    private static final String E_CMD_B = "CMD_B";
+
+    private static String[] getCommandA() {
+        return System.getenv(E_CMD_A).split(" ");
+    }
+
+    private static String[] getCommandB() {
+        return System.getenv(E_CMD_B).split(" ");
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
         launchGame();
@@ -28,13 +29,13 @@ public class Spring2021 {
         gameRunner.setGameParameters(gameParameters);
 
         gameRunner.addAgent(
-            DEFAULT_AI,
+            getCommandA(),
             "Tororo",
             "https://static.codingame.com/servlet/fileservlet?id=61910307869345"
         );
         
         gameRunner.addAgent(
-            DEFAULT_AI,
+            getCommandB(),
             "Ghilbib",
             "https://static.codingame.com/servlet/fileservlet?id=61910289640958"
         );
