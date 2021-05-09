@@ -1,0 +1,29 @@
+name: Docker clean build CI with cron
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: echo $GITHUB_TOKEN | docker login ghcr.io -u btk15049 --password-stdin
+      - name: Build docker image
+        run: |
+          docker build -t current docker
+      - name: Push docker image
+        env:
+          CONTAINER_REGISTRY_PATH: ghcr.io/btk15049
+          IMAGE_NAME: codingame-springchallenge2021
+        run: |
+          TAG=`date "+%Y%m%d"`
+          docker tag current ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG}
+          docker push ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG}
+          docker tag current ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:latest
+          docker push ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:latest
