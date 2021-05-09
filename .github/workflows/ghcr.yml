@@ -15,8 +15,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: echo $GITHUB_TOKEN | docker login ghcr.io -u btk15049 --password-stdin
       - name: Build docker image
-        run: |
-          docker build -t current docker
+        run: docker build -t current .
       - name: Push docker image
         env:
           CONTAINER_REGISTRY_PATH: ghcr.io/btk15049
