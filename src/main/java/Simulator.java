@@ -25,6 +25,9 @@ public class Simulator {
         options.addOption(
                 Option.builder("t").longOpt("times").hasArg(true).desc("battle times").required(false).build());
 
+        options.addOption(Option.builder(null).longOpt("turn-max-time").hasArg(true).desc("turn max time")
+                .required(false).build());
+
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -39,6 +42,9 @@ public class Simulator {
             int times = 1;
             if (cmd.hasOption("t")) {
                 times = Integer.parseInt(cmd.getOptionValue("t"));
+            }
+            if (cmd.hasOption("turn-max-time")) {
+                System.setProperty("TURN_MAX_TIME", cmd.getOptionValue("turn-max-time"));
             }
 
             System.out.println("# Info #####################################");

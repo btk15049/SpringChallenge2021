@@ -15,12 +15,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class Referee extends AbstractReferee {
 
-    @Inject private MultiplayerGameManager<Player> gameManager;
-    @Inject private CommandManager commandManager;
-    @Inject private Game game;
-    @Inject private EndScreenModule endScreenModule;
-    @Inject private ViewModule viewModule;
-    @Inject private GameSummaryManager gameSummaryManager;
+    @Inject
+    private MultiplayerGameManager<Player> gameManager;
+    @Inject
+    private CommandManager commandManager;
+    @Inject
+    private Game game;
+    @Inject
+    private EndScreenModule endScreenModule;
+    @Inject
+    private ViewModule viewModule;
+    @Inject
+    private GameSummaryManager gameSummaryManager;
 
     long seed;
 
@@ -35,6 +41,11 @@ public class Referee extends AbstractReferee {
             Config.export(gameManager.getGameParameters());
             gameManager.setFirstTurnMaxTime(1000);
             gameManager.setTurnMaxTime(100);
+
+            String turnMaxTime = System.getProperty("TURN_MAX_TIME");
+            if (turnMaxTime != null) {
+                gameManager.setTurnMaxTime(Integer.parseInt(turnMaxTime));
+            }
 
             gameManager.setFrameDuration(500);
 
@@ -103,14 +114,10 @@ public class Referee extends AbstractReferee {
 
         game.onEnd();
 
-        int scores[] = gameManager.getPlayers().stream()
-            .mapToInt(Player::getScore)
-            .toArray();
-        
-        String displayedText[] = gameManager.getPlayers().stream()
-            .map(Player::getBonusScore)
-            .toArray(String[]::new);
-     
+        int scores[] = gameManager.getPlayers().stream().mapToInt(Player::getScore).toArray();
+
+        String displayedText[] = gameManager.getPlayers().stream().map(Player::getBonusScore).toArray(String[]::new);
+
         endScreenModule.setScores(scores, displayedText);
     }
 
