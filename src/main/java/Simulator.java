@@ -63,29 +63,77 @@ public class Simulator {
     public static void simulate(long seed, String alice, String bob, int times)
             throws IOException, InterruptedException {
 
+        int battles = 0;
+        int aliceWins = 0;
+        int bobWins = 0;
+        int draws = 0;
+        int aliceScoreTotal = 0;
+        int bobScoreTotal = 0;
+
         for (int i = 0; i < times; i++) {
             {
                 System.out.printf("\n-- Run %03d-1 --\n", i + 1);
 
                 GameResult result = simulate(seed, "Alice", alice, "Bob", bob);
 
+                int aliceScore = result.scores.get(0);
+                int bobScore = result.scores.get(1);
+
                 System.out.println("# Result ###################################");
-                System.out.printf("Alice: %d\n", result.scores.get(0));
-                System.out.printf("Bob: %d\n", result.scores.get(1));
+                System.out.printf("Alice: %d\n", aliceScore);
+                System.out.printf("Bob: %d\n", bobScore);
                 System.out.println("############################################");
+
+                battles++;
+                aliceScoreTotal += aliceScore;
+                bobScoreTotal += bobScore;
+                if (aliceScore > bobScore) {
+                    aliceWins++;
+                } else if (aliceScore < bobScore) {
+                    bobWins++;
+                } else {
+                    draws++;
+                }
+
             }
             {
                 System.out.printf("\n-- Run %03d-2 --\n", i + 1);
 
                 GameResult result = simulate(seed, "Bob", bob, "Alice", alice);
 
+                int aliceScore = result.scores.get(1);
+                int bobScore = result.scores.get(0);
+
                 System.out.println("# Result ###################################");
-                System.out.printf("Alice: %d\n", result.scores.get(1));
-                System.out.printf("Bob: %d\n", result.scores.get(0));
+                System.out.printf("Alice: %d\n", aliceScore);
+                System.out.printf("Bob: %d\n", bobScore);
                 System.out.println("############################################");
+
+                battles++;
+                aliceScoreTotal += aliceScore;
+                bobScoreTotal += bobScore;
+                if (aliceScore > bobScore) {
+                    aliceWins++;
+                } else if (aliceScore < bobScore) {
+                    bobWins++;
+                } else {
+                    draws++;
+                }
             }
             seed++;
         }
+
+        System.out.println();
+        System.out.println("# Total Result #############################");
+        System.out.printf("Alice Win: %d\n", aliceWins);
+        System.out.printf("Bob Win: %d\n", bobWins);
+        System.out.printf("Draw: %d\n", draws);
+        System.out.printf("Alice Score Total: %d\n", aliceScoreTotal);
+        System.out.printf("Bob Score Total: %d\n", bobScoreTotal);
+        System.out.printf("Alice Score Average: %f\n", (double) aliceScoreTotal / (double) battles);
+        System.out.printf("Bob Score Average: %f\n", (double) bobScoreTotal / (double) battles);
+        System.out.printf("Battles: %d\n", battles);
+        System.out.println("############################################");
     }
 
     public static GameResult simulate(long seed, String nameA, String cmdA, String nameB, String cmdB)
