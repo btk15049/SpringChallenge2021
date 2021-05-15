@@ -77,7 +77,7 @@ public class Simulator {
         int bobScoreTotal = 0;
 
         for (int i = 0; i < times; i++) {
-            {
+            while (true) {
                 System.out.printf("\n-- Run %03d-1 --\n", i + 1);
 
                 GameResult result = simulate(seed, "Alice", alice, "Bob", bob);
@@ -85,6 +85,22 @@ public class Simulator {
                 int aliceScore = result.scores.get(0);
                 int bobScore = result.scores.get(1);
 
+                if (aliceScore == -1 || bobScore == -1) {
+                    if(aliceScore == -1) {
+                        System.err.println("-- Alice's.stderr --------------");
+                        System.err.println(result.errors.get("0").toString());
+                    }
+                    if(bobScore == -1) {
+                        System.err.println("-- Bob's.stderr --------------");
+                        System.err.println(result.errors.get("1").toString());
+                    }
+                    System.err.println("-- Referee say --------------");
+                    System.err.println(result.outputs.get("referee").toString());
+
+                    System.out.println("Retry!");
+                    continue;
+                }
+
                 System.out.println("# Result ###################################");
                 System.out.printf("Alice: %d\n", aliceScore);
                 System.out.printf("Bob: %d\n", bobScore);
@@ -100,9 +116,9 @@ public class Simulator {
                 } else {
                     draws++;
                 }
-
+                break;
             }
-            {
+            while(true){
                 System.out.printf("\n-- Run %03d-2 --\n", i + 1);
 
                 GameResult result = simulate(seed, "Bob", bob, "Alice", alice);
@@ -110,6 +126,21 @@ public class Simulator {
                 int aliceScore = result.scores.get(1);
                 int bobScore = result.scores.get(0);
 
+                if (aliceScore == -1 || bobScore == -1) {
+                    if(aliceScore == -1) {
+                        System.err.println("-- Alice's.stderr --------------");
+                        System.err.println(result.errors.get("1").toString());
+                    }
+                    if(bobScore == -1) {
+                        System.err.println("-- Bob's.stderr --------------");
+                        System.err.println(result.errors.get("0").toString());
+                    }
+                    System.err.println("-- Referee say --------------");
+                    System.err.println(result.outputs.get("referee").toString());
+                    System.out.println("Retry!");
+                    continue;
+                }
+
                 System.out.println("# Result ###################################");
                 System.out.printf("Alice: %d\n", aliceScore);
                 System.out.printf("Bob: %d\n", bobScore);
@@ -125,6 +156,7 @@ public class Simulator {
                 } else {
                     draws++;
                 }
+                break;
             }
             seed++;
         }
